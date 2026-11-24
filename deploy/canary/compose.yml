@@ -1,0 +1,16 @@
+# Canary : la version stable reçoit presque tout, la nouvelle version un petit pourcentage.
+services:
+  stable:
+    image: ${STABLE_IMAGE:-shipit:1.0.0}
+  canary:
+    image: ${CANARY_IMAGE:-shipit:1.1.0}
+  proxy:
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    # On monte le DOSSIER (pas le fichier) : un éditeur ou « sed -i » remplace le fichier,
+    # et un montage de fichier unique garderait l'ancienne version dans le conteneur.
+    volumes:
+      - ./:/conf:ro
+    command: ["nginx", "-c", "/conf/nginx.conf", "-g", "daemon off;"]
+    depends_on: [stable, canary]
