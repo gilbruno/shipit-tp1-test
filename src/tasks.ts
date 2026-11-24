@@ -1,4 +1,3 @@
-export const age: number = "vingt";
 import { randomUUID } from "node:crypto";
 
 export interface Task {
